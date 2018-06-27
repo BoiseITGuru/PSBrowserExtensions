@@ -16,8 +16,11 @@ Visit the Chrome webstore here:
 https://chrome.google.com/webstore/category/extensions
 
 Search and find the extension you wish to load, and note the ID in the URL
-https://chrome.google.com/webstore/detail/honey/bmnlcjabgnpnenekpadlanbbkooimhnj
 
+```
+Example URL:
+https://chrome.google.com/webstore/detail/honey/bmnlcjabgnpnenekpadlanbbkooimhnj
+```
 In the above Honey example the ID is: bmnlcjabgnpnenekpadlanbbkooimhnj
 
 Using the Script
