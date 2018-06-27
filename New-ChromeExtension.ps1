@@ -21,34 +21,69 @@ Function New-ChromeExtension {
     [cmdletBinding()]
     Param(
         [Parameter(Mandatory)]
-        [String[]]$ExtensionID
+        [String[]]$ExtensionID,
+        [Parameter(Mandatory)]
+        [ValidateSet('Machine', 'User')]
+        [String]$Mode
+
     )
 
+    #Loop through each Extension in ExtensionID since it is an array.
+    #Create a Key for every member of the ExtensionID Array
     Foreach ($Extension in $ExtensionID) {
       
         $regLocation = 'Software\Policies\Google\Chrome\ExtensionInstallForcelist'
-        # Each extension if you want to force install more than 1 extension needs its own key #
-
-        If (!(Test-Path "HKLM:\$regLocation")) {
-            Write-Verbose -Message "No Registry Path, setting count to: 0"
-            [int]$Count = 0
-            Write-Verbose -Message "Count is now $Count" 
-            New-Item -Path "HKLM:\$regLocation" -Force
         
+        #Target HKLM or HKCU depending on whether you want to affect EVERY user, or just a single user.
+        #If using HKCU, you'll need to run this script in that user context.
+        Switch ($Mode) {
+            'Machine' {
+                If (!(Test-Path "HKLM:\$regLocation")) {
+                    Write-Verbose -Message "No Registry Path, setting count to: 0"
+                    [int]$Count = 0
+                    Write-Verbose -Message "Count is now $Count" 
+                    New-Item -Path "HKLM:\$regLocation" -Force
+        
+                }
+        
+                Else {
+                    Write-Verbose -Message "Keys found, counting them..."
+                    [int]$Count = (Get-Item "HKLM:\$regLocation").Count
+                    Write-Verbose -Message "Count is now $Count"
+                }
+            }
+            
+            'User' {
+                If (!(Test-Path "HKCU:\$regLocation")) {
+                    
+                    Write-Verbose -Message "No Registry Path, setting count to: 0"
+                    [int]$Count = 0
+                    Write-Verbose -Message "Count is now $Count" 
+                    New-Item -Path "HKCU:\$regLocation" -Force
+        
+                }
+        
+                Else {
+                    
+                    Write-Verbose -Message "Keys found, counting them..."
+                    [int]$Count = (Get-Item "HKCU:\$regLocation").Count
+                    Write-Verbose -Message "Count is now $Count"
+                
+                }
+            }
         }
-        
-        Else {
-            Write-Verbose -Message "Keys found, counting them..."
-            [int]$Count = (Get-Item "HKLM:\$regLocation").Count
-            Write-Verbose -Message "Count is now $Count"
-        }
 
-        
         $regKey = $Count + 1
         Write-Verbose -Message "Creating reg key with value $regKey"
         
         $regData = "$Extension;https://clients2.google.com/service/update2/crx"
-        New-ItemProperty -Path "HKLM:\$regLocation" -Name $regKey -Value $regData -PropertyType STRING -Force
+
+        Switch ($Mode) {
+            
+            'Machine' { New-ItemProperty -Path "HKLM:\$regLocation" -Name $regKey -Value $regData -PropertyType STRING -Force }
+            'User' { New-ItemProperty -Path "HKCU:\$regLocation" -Name $regKey -Value $regData -PropertyType STRING -Force }
+        
+        }
     
     }
 
