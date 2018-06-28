@@ -24,6 +24,19 @@ Function New-FirefoxExtension {
     #Download the Extension and save it to the FireFoxExtensions folder
     Invoke-WebRequest -Uri $ExtensionUri -OutFile "C:\FirefoxExtensions\$Extension"
 
+    Get-ChildItem -Path $ExtensionPath | Rename-Item -NewName {$_.Name -replace ".xpi",".zip"}
+
+    If ($PSVersionTable.PSVersion.Major -ge 4) {
+        
+        Expand-Archive -Path (Get-ChildItem $ExtensionPath).FullName -DestinationPath $ExtensionPath
+    }
+
+    Else {
+
+        [System.IO.Compression.ZipFile]::ExtractToDirectory((Get-ChildItem $ExtensionPath).FullName,$ExtensionPath)
+
+    }
+
     Switch ($Hive) {
         
         'HKCU' {
@@ -84,4 +97,10 @@ Function New-FirefoxExtension {
     }#end outer switch
 }
 
-New-FirefoxExtension -ExtensionPath 'C:\FirefoxExtensions' -ExtensionUri 'https://addons.mozilla.org/firefox/downloads/file/984183/keepacom_amazon_preisuberwachung-3.29-an+fx.xpi?src=collection' -Hive HKLM
+$cmdletParams = @{
+    'ExtensionUri' = 'https://addons.mozilla.org/firefox/downloads/file/984183/keepacom_amazon_preisuberwachung-3.29-an+fx.xpi?src=collection'
+    'ExtensionPath' = 'C:\FirefoxExtensions'
+    'Hive' = 'HKLM'
+}
+
+New-FirefoxExtension @cmdletParams
