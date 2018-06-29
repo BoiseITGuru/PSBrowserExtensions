@@ -1,7 +1,7 @@
 # PSBrowserExtensions
 
 #Google Chrome
-Add extensions to chrome via Web  Strore ID via powershell
+Add extensions to chrome via Web  Store ID via powershell
 
 Getting the extension
 ------
