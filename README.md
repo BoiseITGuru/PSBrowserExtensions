@@ -36,7 +36,7 @@ Using the Script
 
 ```
 Import-Module C:\Scripts\New-ChromeExtension.ps1
-New-ChromeExtension -ExtensionID 'bmnlcjabgnpnenekpadlanbbkooimhnj' -Mode Machine
+New-ChromeExtension -ExtensionID 'bmnlcjabgnpnenekpadlanbbkooimhnj' -Hive Machine
 ```
 
 #Mozilla Firefox

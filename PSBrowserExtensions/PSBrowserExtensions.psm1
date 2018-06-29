@@ -16,6 +16,9 @@ Function New-ChromeExtension {
     This will install uBlock Origin, and Zoom Meetings
     New-ChromeExtension -ExtensionID @('kgjfgplpablkjnlkjmjdecgdpfankdle', 'cjpalhdlnbpafiamejdnhcphjbkeiagm') -Verbose
     
+    .EXAMPLE
+    This will install uBlock Origin to the HKCU hive
+    New-ChromeExtension -ExtensionID 'cjpalhdlnbpafiamejdnhcphjbkeiagm' -Hive 'HKCU'
     #>
     
     [cmdletBinding()]
@@ -24,7 +27,7 @@ Function New-ChromeExtension {
         [String[]]$ExtensionID,
         [Parameter(Mandatory)]
         [ValidateSet('Machine', 'User')]
-        [String]$Mode
+        [String]$Hive
 
     )
 
@@ -36,7 +39,7 @@ Function New-ChromeExtension {
         
         #Target HKLM or HKCU depending on whether you want to affect EVERY user, or just a single user.
         #If using HKCU, you'll need to run this script in that user context.
-        Switch ($Mode) {
+        Switch ($Hive) {
             'Machine' {
                 If (!(Test-Path "HKLM:\$regLocation")) {
                     Write-Verbose -Message "No Registry Path, setting count to: 0"
@@ -78,7 +81,7 @@ Function New-ChromeExtension {
         
         $regData = "$Extension;https://clients2.google.com/service/update2/crx"
 
-        Switch ($Mode) {
+        Switch ($Hive) {
             
             'Machine' { New-ItemProperty -Path "HKLM:\$regLocation" -Name $regKey -Value $regData -PropertyType STRING -Force }
             'User' { New-ItemProperty -Path "HKCU:\$regLocation" -Name $regKey -Value $regData -PropertyType STRING -Force }
