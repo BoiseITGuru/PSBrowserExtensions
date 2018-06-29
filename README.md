@@ -1,14 +1,20 @@
 # PSBrowserExtensions
 
+Getting the module
+------
+
+ 1. Clone the repository with git using `git clone https://svalding@bitbucket.org/svalding/psbrowserextensions.git`
+ _or_
+ 2. Visit https://bitbucket.org/svalding/psbrowserextensions/downloads/ and click the Download repository link
+
+ 3. Unzip the file
+
+ 4. Place the PSBrowserExtensions folder in one of the locations returned by `$PSModulePath` in powershell
+ 
 #Google Chrome
 Add extensions to chrome via Web  Store ID via powershell
 
-Getting the extension
-------
 
-Clone the repository with git using `git clone https://svalding@bitbucket.org/svalding/psbrowserextensions.git`
-
-Visit https://bitbucket.org/svalding/psbrowserextensions/downloads/ and click the Download repository link
 
 
 Finding Chrome Extensions
